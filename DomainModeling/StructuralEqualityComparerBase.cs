@@ -11,7 +11,7 @@ namespace DomainModeling
             public bool Equals(TProp x, TProp y) => 
                 InternalEquals(x, y);
 
-            private bool InternalEquals(object x, object y)
+            private bool InternalEquals(object? x, object? y)
             {
                 if (x == null && y == null)
                 {
