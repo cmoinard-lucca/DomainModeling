@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DomainModeling.DomainModeling
+namespace DomainModeling
 {
     public abstract class ValueObject : StructuralEqualityObject
     {

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace DomainModeling.DomainModeling
+namespace DomainModeling
 {
     public abstract class Entity<TId>
         where TId : notnull

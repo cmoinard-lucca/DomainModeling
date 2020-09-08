@@ -1,4 +1,4 @@
-namespace DomainModeling.DomainModeling
+namespace DomainModeling
 {
     public abstract class Id<T> : SimpleValueObject<T>
         where T : notnull
