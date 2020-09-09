@@ -123,3 +123,68 @@ var superman =
 
 clarkKent == superman // true
 ```
+
+## Validation
+
+```csharp
+public class Email : StringBasedValueObject
+{
+    public Email(string value)
+        : base(value)
+    {
+        Validate(value).EnsureIsValid();
+    }
+
+    public static Validation<Email> TryCreate(string value) =>
+        Validate(value)
+            .ToValidation(() => new Email(value));
+
+    private static IReadOnlyCollection<ValidationError> Validate(string value)
+    {
+        var errors = new List<ValidationError>();
+        
+        if (value.IsNullOrEmpty())
+        {
+            errors.Add(new EmptyValidationError());
+        }
+        else
+        {
+            if (value.Length > 255)
+            {
+                errors.Add(new ExceedsMaxLengthValidationError());
+            }
+
+            if (!value.Contains('@'))
+            {
+                errors.Add(new InvalidFormatValidationError());
+            }
+        }
+    }
+
+    public class EmptyValidationError : SimpleValidationError {}
+
+    public class ExceedsMaxLengthValidationError : SimpleValidationError {}
+
+    public class InvalidFormatValidationError : SimpleValidationError {}
+}
+
+var invalidEmail = Email.TryCreate("toto");
+invalidEmail.IsValid // false
+invalidEmail.IsInvalid // true
+invalidEmail.Errors // [InvalidFormatValidationError]
+invalidEmail.Value // Exception
+invalidEmail.EnsureIsValid() // ValidationException([InvalidFormatValidationError])
+
+var validEmail = Email.TryCreate("toto@tata.com");
+validEmail.IsValid // true
+validEmail.IsInvalid // false
+validEmail.Errors // Exception
+validEmail.Value // Email
+
+var errors = new [] { new InvalidFormatValidationError() };
+errors.ToValidation(() => new Truc()) // Validation<Truc> Invalid
+
+var empty = new List<ValidationError>();
+empty.ToValidation(() => new Truc()) // Validation<Truc> Valid
+
+```
